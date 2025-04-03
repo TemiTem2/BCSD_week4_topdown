@@ -3,7 +3,8 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public float Speed = 2f;
-
+    public GameManager Manager;
+    
     float h;
     int h1;
     float v;
@@ -23,16 +24,16 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //움직임 값
-        h = Input.GetAxisRaw("Horizontal");
-        v = Input.GetAxisRaw("Vertical");
+        h = Manager.isAction? 0 : Input.GetAxisRaw("Horizontal");
+        v = Manager.isAction? 0 : Input.GetAxisRaw("Vertical");
         h1 = (int)h;
         v1 = (int)v;
 
         //버튼 업다운
-        bool hDown = Input.GetButtonDown("Horizontal");
-        bool hUp = Input.GetButtonUp("Horizontal");
-        bool vDown = Input.GetButtonDown("Vertical");
-        bool vUp = Input.GetButtonUp("Vertical");
+        bool hDown = Manager.isAction? false : Input.GetButtonDown("Horizontal");
+        bool hUp = Manager.isAction ? false : Input.GetButtonUp("Horizontal");
+        bool vDown = Manager.isAction ? false : Input.GetButtonDown("Vertical");
+        bool vUp = Manager.isAction ? false : Input.GetButtonUp("Vertical");
 
 
         //상하좌우확인
@@ -77,7 +78,7 @@ public class PlayerMove : MonoBehaviour
         //scan object
         if (Input.GetButtonDown("Jump") && scanObject != null)
         {
-            Debug.Log("This is :"+scanObject.name);
+            Manager.Action(scanObject);
         }
 
     }
