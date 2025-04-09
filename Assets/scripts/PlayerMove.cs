@@ -14,6 +14,20 @@ public class PlayerMove : MonoBehaviour
     Vector3 dirvec;
     Rigidbody2D rigid;
     GameObject scanObject;
+
+    //Mobile Key var
+    int up_Value;
+    int down_Value;
+    int left_Value;
+    int right_Value;
+    bool up_down;
+    bool down_down;
+    bool left_down;
+    bool right_down;
+    bool up_up;
+    bool down_up;
+    bool left_up;
+    bool right_up;
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -23,18 +37,24 @@ public class PlayerMove : MonoBehaviour
     
     void Update()
     {
-        //움직임 값
+        //PC 움직임 값
         h = Manager.isAction? 0 : Input.GetAxisRaw("Horizontal");
         v = Manager.isAction? 0 : Input.GetAxisRaw("Vertical");
         h1 = (int)h;
         v1 = (int)v;
+        //Moblie
+        h = Manager.isAction ? 0 : right_Value+left_Value;
+        v = Manager.isAction ? 0 : up_Value+down_Value;
+        h1 = (int)h;
+        v1 = (int)v;
+
 
         //버튼 업다운
-        bool hDown = Manager.isAction? false : Input.GetButtonDown("Horizontal");
-        bool hUp = Manager.isAction ? false : Input.GetButtonUp("Horizontal");
-        bool vDown = Manager.isAction ? false : Input.GetButtonDown("Vertical");
-        bool vUp = Manager.isAction ? false : Input.GetButtonUp("Vertical");
-
+        bool hDown = Manager.isAction? false : Input.GetButtonDown("Horizontal")|| right_down || left_down;
+        bool hUp = Manager.isAction ? false : Input.GetButtonUp("Horizontal")|| right_up || left_up;
+        bool vDown = Manager.isAction ? false : Input.GetButtonDown("Vertical")||up_down || down_down;
+        bool vUp = Manager.isAction ? false : Input.GetButtonUp("Vertical")|| up_up || down_up;
+ 
 
         //상하좌우확인
         if (hDown || vUp)
@@ -81,6 +101,15 @@ public class PlayerMove : MonoBehaviour
             Manager.Action(scanObject);
         }
 
+        //Mobile Var init
+        up_down=false;
+        down_down=false;
+        left_down=false;
+        right_down=false;
+        up_up=false;
+        down_up=false;
+        left_up=false;
+        right_up = false;
     }
 
 
@@ -101,6 +130,61 @@ public class PlayerMove : MonoBehaviour
         else
         {
             scanObject = null;
+        }
+    }
+
+    public void ButtonDown(string type)
+    {
+        switch (type)
+        {
+            case "U":
+                up_Value = 1;
+                up_down = true;
+                break;
+            case "D":
+                down_Value =- 1;
+                down_down = true;
+                break;
+            case "L":
+                left_Value = -1;
+                left_down = true;
+                break;
+            case "R":
+                right_Value = 1;
+                right_down = true;
+                break;
+            case "A":
+                if (scanObject != null)
+                {
+                    Manager.Action(scanObject);
+                }
+                break;
+            case "C":
+                Manager.SubmenuActive();
+                break;
+        }
+    }
+
+    public void ButtonUp(string type)
+    {
+        switch (type)
+        {
+            case "U":
+                up_Value = 0;
+                up_up = true;
+                break;
+            case "D":
+                down_Value = 0;
+                down_up = true;
+                break;
+            case "L":
+                left_Value = 0;
+                left_up = true;
+                break;
+            case "R":
+                right_Value = 0;
+                right_up = true;
+                break;
         }
     }
 }
